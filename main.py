@@ -7,7 +7,6 @@
 
 
 import os
-
 from raglink.rag.main import RAGLink
 from dotenv import load_dotenv
 load_dotenv()
@@ -51,6 +50,6 @@ config = {
 rag = RAGLink.from_config(config)
 # print(rag.test())
 
-# res = rag.execute_store("./data/aimdt.txt")
+res = rag.execute_store("./data/aimdt.txt")
 res = rag.get_context(question="14个的大型语言模型有哪些", limit=2)
 print(res)
