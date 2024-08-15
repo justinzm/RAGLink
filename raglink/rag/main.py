@@ -41,12 +41,12 @@ class RAGConfig(BaseModel):
 class RAGLink:
     def __init__(self, config: RAGConfig = RAGConfig()):
         self.config = config
+        self.embedding_model = EmbedderFactory.create(self.config.embedder.provider,
+                                                      self.config.embedder.config)
         self.vector_store = VectorStoreFactory.create(self.config.vector_store.provider,
                                                       self.config.vector_store.config)
         self.test_splitter = TestSplitterFactory.create(self.config.test_splitter.provider,
                                                        self.config.test_splitter.config)
-        self.embedding_model = EmbedderFactory.create(self.config.embedder.provider,
-                                                      self.config.embedder.config)
 
     @classmethod
     def from_config(cls, config_dict: Dict[str, Any]):
@@ -66,8 +66,8 @@ class RAGLink:
         docs = self.test_splitter.execute(file_content=file_content)
 
         # 3. 向量化与向量存储
-        result = self.vector_store.insert(embeddings=self.embedding_model, vectors=docs)
-        return result
+        self.vector_store.insert(embeddings=self.embedding_model, vectors=docs)
+        return "执行向量数据存储完成"
 
     # 获取上下文信息
     def get_context(self, question, limit=3):

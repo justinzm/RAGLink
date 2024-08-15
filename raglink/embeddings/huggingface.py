@@ -7,20 +7,13 @@
 
 
 from raglink.embeddings.base import EmbeddingBase
-from langchain_huggingface import HuggingFaceEmbeddings
+from sentence_transformers import SentenceTransformer
 
 
 class HuggingFaceEmbedding(EmbeddingBase):
     def __init__(self, model_name):
-        model_kwargs = {'device': 'cpu'}
-        encode_kwargs = {'batch_size': 64, 'normalize_embeddings': True}
-
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name=model_name,
-            model_kwargs=model_kwargs,
-            encode_kwargs=encode_kwargs
-        )
+        self.embeddings = SentenceTransformer(model_name)
 
     def embed(self, text):
-        return self.embeddings.embed_query(text)
+        return self.embeddings.encode(text)
 

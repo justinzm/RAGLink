@@ -7,48 +7,52 @@
 
 
 import os
-from raglink.rag.main import RAGLink
 from dotenv import load_dotenv
 load_dotenv()
 
-# # 代理服务器地址和端口
-proxy_host = 'localhost'
-proxy_port = '7890'
+from raglink.rag.main import RAGLink
 
-# 设置 HTTP 和 HTTPS 代理
-os.environ['http_proxy'] = f'http://{proxy_host}:{proxy_port}'
-os.environ['https_proxy'] = f'http://{proxy_host}:{proxy_port}'
+# # 代理服务器地址和端口
+# proxy_host = 'localhost'
+# proxy_port = '7890'
+#
+# # 设置 HTTP 和 HTTPS 代理
+# os.environ['http_proxy'] = f'http://{proxy_host}:{proxy_port}'
+# os.environ['https_proxy'] = f'http://{proxy_host}:{proxy_port}'
+
 
 config = {
     "vector_store": {
-        "provider": "qdrant",
+        "provider": "milvus",
         "config": {
-            "collection_name": "ggg",
+            "collection_name": "dianxin_test",
             "vector_size": 1536,
-            # "partition_name": "abc",
-            "url": os.getenv("MILVUS_URI"),
+            "partition_name": "0814",
+            "uri": os.getenv("MILVUS_URI"),
             "api_key": os.getenv("MILVUS_TOKEN"),
             # "host": "localhost",
             # "port": 6333
         }
     },
     "test_splitter": {
-        "provider": "character",
+        "provider": "separator",
         "config": {
             "chunk_size": 300,
-            "chunk_overlap": 20
+            "chunk_overlap": 20,
+            "separator": "\n\n"
         }
     },
     "embedder": {
-        "provider": "huggingface",
+        "provider": "minimax",
         "config": {
-            "model_name": "maidalun1020/bce-embedding-base_v1",
+            "api_key": os.getenv("MINIMAX_API_KEY"),
+            "group_id": os.getenv("MINIMAX_GROUP_ID"),
         }
     }
 }
 rag = RAGLink.from_config(config)
 # print(rag.test())
 
-res = rag.execute_store("./data/aimdt.txt")
+res = rag.execute_store("./data/提问解答.txt")
 # res = rag.get_context(question="14个的大型语言模型有哪些", limit=2)
 print(res)
