@@ -27,7 +27,7 @@ config = {
         "config": {
             "collection_name": "dianxin_test",
             "vector_size": 1536,
-            "partition_name": "0814",
+            "partition_name": "0830",
             "uri": os.getenv("MILVUS_URI"),
             "api_key": os.getenv("MILVUS_TOKEN"),
             # "host": "localhost",
