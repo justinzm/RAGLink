@@ -27,7 +27,7 @@ config = {
         "config": {
             "collection_name": "dianxin_test",
             "vector_size": 1536,
-            "partition_name": "0830",
+            "partition_name": "0910",
             "uri": os.getenv("MILVUS_URI"),
             "api_key": os.getenv("MILVUS_TOKEN"),
             # "host": "localhost",
@@ -53,6 +53,6 @@ config = {
 rag = RAGLink.from_config(config)
 # print(rag.test())
 
-res = rag.execute_store("./data/提问解答.txt")
+res = rag.execute_store("./data/电信问答.txt")
 # res = rag.get_context(question="14个的大型语言模型有哪些", limit=2)
 print(res)

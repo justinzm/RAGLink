@@ -64,13 +64,14 @@ class Milvus():
         else:
             self.create_col(partition_name, vector_size)
 
+    # 创建集合与索引
     def create_col(self, partition_name, vector_size, metric_type='L2'):
         """
-        创建集合与索引
-        :param name:                    集合分区名
-        :param dimension:               向量维度
-        :param metric_type:             默认 L2    L2距离(欧氏距离)是向量相似性度量方法，用于衡量向量之间的距离和相似度
-        :return:
+            创建集合与索引
+            :param name:                    集合分区名
+            :param dimension:               向量维度
+            :param metric_type:             默认 L2    L2距离(欧氏距离)是向量相似性度量方法，用于衡量向量之间的距离和相似度
+            :return:
         """
         # --- 1. 创建集合 ---
         # CollectionSchema 类创建了一个集合模式 schema（纲要），并指定了集合的字段定义和描述信息。
@@ -112,6 +113,7 @@ class Milvus():
         # 创建集合分区
         self._create_partition(partition_name=partition_name, partition_description="")
 
+    # 创建集合分区
     def _create_partition(self, partition_name: str, partition_description: str=""):
         """
             创建集合分区
@@ -131,11 +133,21 @@ class Milvus():
             partition.load()
             logger.debug(f"Milvus 创建 {partition_name} 分区成功")
 
-    def delete(self):
-        if utility.has_collection(self.collection_name):
-            utility.drop_collection(self.collection_name)
-            logger.info(f"Milvus 删除 {self.collection_name} 集合成功")
-        logger.error("Milvus 删除集合 失败")
+    # 列出集合所有分区
+    def list_cols(self):
+        """
+            列出集合所有分区。
+            :return: 集合中所有分区
+        """
+        return self.client.partitions
+
+    def col_info(self):
+        """
+        获取关于集合的信息。
+        :param name:
+        :return:
+        """
+        return self.client.list_collections
 
     def insert(self, embeddings, vectors):
         # 判断分区是否存在，不存在创建分区
@@ -163,7 +175,7 @@ class Milvus():
         """
         查询分区中的数据
         :param query:           查询向量数据
-        :param top_k:           输出块数
+        :param limit:           输出块数
         :return:
         """
         # 判断该集合中分区是否存在
@@ -192,3 +204,33 @@ class Milvus():
             return result
         else:
             logger.warning(f"Milvus 该分区不存在，分区名：{self.partition_name}")
+
+    # 删除集合
+    def delete_col(self):
+        """
+            删除集合
+            :return:
+        """
+        try:
+            if utility.has_collection(self.collection_name):
+                utility.drop_collection(self.collection_name)
+                logger.info(f"Milvus 删除 {self.collection_name} 集合成功")
+        except Exception as e:
+            logger.error(f"Milvus 删除集合 失败: {str(e)}")
+
+    # 删除集合分区
+    def delete_partition(self, partition_name=None):
+        """
+            删除集合分区
+            :param partition_name:          分区名称,默认None为初始化设置的分区名
+            :return:
+        """
+        if partition_name is not None:
+            self.partition_name = partition_name
+        try:
+            if utility.has_partition(self.collection_name, self.partition_name):
+                self.client.release()
+                self.client.drop_partition(self.partition_name)
+                logger.info("Milvus 删除集合分区 成功")
+        except Exception as e:
+            logger.error(f"Milvus 删除集合分区 失败: {str(e)}")
