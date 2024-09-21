@@ -28,8 +28,8 @@ config = {
             "collection_name": "dianxin_test",
             "vector_size": 1536,
             "partition_name": "0910",
-            "uri": os.getenv("MILVUS_URI"),
-            "api_key": os.getenv("MILVUS_TOKEN"),
+            "uri": os.getenv("MILVUS_URI_EN"),
+            "api_key": os.getenv("MILVUS_TOKEN_EN"),
             # "host": "localhost",
             # "port": 6333
         }
