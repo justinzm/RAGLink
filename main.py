@@ -25,21 +25,20 @@ config = {
     "vector_store": {
         "provider": "milvus",
         "config": {
-            "collection_name": "dianxin_test",
+            "collection_name": "aimdt",
             "vector_size": 1536,
-            "partition_name": "0910",
-            "uri": os.getenv("MILVUS_URI_EN"),
-            "api_key": os.getenv("MILVUS_TOKEN_EN"),
-            # "host": "localhost",
-            # "port": 6333
+            "partition_name": "psychology",
+            # "uri": os.getenv("MILVUS_URI_EN"),
+            # "api_key": os.getenv("MILVUS_TOKEN_EN"),
+            "host": "localhost",
+            "port": 19530
         }
     },
     "test_splitter": {
-        "provider": "separator",
+        "provider": "recursive_character",
         "config": {
-            "chunk_size": 300,
-            "chunk_overlap": 20,
-            "separator": "\n\n"
+            "chunk_size": 600,
+            "chunk_overlap": 50
         }
     },
     "embedder": {
@@ -53,6 +52,8 @@ config = {
 rag = RAGLink.from_config(config)
 # print(rag.test())
 
-res = rag.execute_store("./data/电信问答.txt")
+# res = rag.execute_store("./data/电信问答.txt")
+res = rag.execute_store_batch("./data")
+
 # res = rag.get_context(question="14个的大型语言模型有哪些", limit=2)
 print(res)

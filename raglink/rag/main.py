@@ -8,6 +8,7 @@
 # @desc    :
 
 
+import os
 from typing import Any, Dict, Optional
 from pydantic import BaseModel, Field, ValidationError
 
@@ -67,7 +68,17 @@ class RAGLink:
 
         # 3. 向量化与向量存储
         self.vector_store.insert(embeddings=self.embedding_model, vectors=docs)
-        return "执行向量数据存储完成"
+
+        logger.debug(f"执行向量数据存储完成: {file_path}")
+
+    def execute_store_batch(self, directory):
+        file_paths = []  # 用于存储文件路径的列表
+        for root, directories, files in os.walk(directory):
+            for filename in files:
+                filepath = os.path.join(root, filename)
+                file_paths.append(filepath)
+        for file_path in file_paths:
+            self.execute_store(file_path)
 
     # 获取上下文信息
     def get_context(self, question, limit=3):

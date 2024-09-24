@@ -14,7 +14,7 @@ from raglink.utils.tools import load_class
 # LLM提供者名称到类名的映射
 provider_to_class = {
     "character": "raglink.test_splitter.character.CharacterTestSplitter",
-    "recursive_character": "raglink.test_splitter.recursive_character.RecursiveCharacterTextSplitter",
+    "recursive_character": "raglink.test_splitter.recursive_character.RecursiveCharacterTestSplitter",
     "separator": "raglink.test_splitter.separator.SeparatorTestSplitter"
 }
 
