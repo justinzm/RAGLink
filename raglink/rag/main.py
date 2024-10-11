@@ -60,6 +60,7 @@ class RAGLink:
 
     # 执行向量数据存储
     def execute_store(self, file_path):
+        logger.info(f"执行文档 {file_path}")
         # 1. 获取加载内容
         file_content = DocumentLoaders().run(file_path=file_path)
 

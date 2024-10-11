@@ -27,7 +27,7 @@ config = {
         "config": {
             "collection_name": "aimdt",
             "vector_size": 1536,
-            "partition_name": "psychology",
+            "partition_name": "nutrition",
             # "uri": os.getenv("MILVUS_URI_EN"),
             # "api_key": os.getenv("MILVUS_TOKEN_EN"),
             "host": "localhost",
@@ -52,8 +52,7 @@ config = {
 rag = RAGLink.from_config(config)
 # print(rag.test())
 
-# res = rag.execute_store("./data/电信问答.txt")
-res = rag.execute_store_batch("./data")
+res = rag.execute_store("./data/nutrition/基于患者报告结局的肿瘤营养治疗系统临床应用专家共识.pdf")
+# res = rag.execute_store_batch("./data")
 
 # res = rag.get_context(question="14个的大型语言模型有哪些", limit=2)
-print(res)
