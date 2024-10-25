@@ -60,7 +60,7 @@ class Milvus():
             if str(load_status) == "NotLoad":
                 self.client.load()
             logger.debug(f"Milvus {self.collection_name} 集合已存在载入该集合")
-            self._create_partition(partition_name=partition_name, partition_description="")
+            # self._create_partition(partition_name=partition_name, partition_description="")
         else:
             self.create_col(partition_name, vector_size)
 
@@ -154,7 +154,8 @@ class Milvus():
         if self.client.has_partition(self.partition_name):
             newpart = self.client.partition(self.partition_name)
         else:
-            self.create_partition(self.partition_name)
+            self._create_partition(partition_name=self.partition_name, partition_description="")
+            # self.create_partition(self.partition_name)
             newpart = self.client.partition(self.partition_name)
 
         if isinstance(vectors[0], Document):
