@@ -18,7 +18,7 @@ RAGLink是一个开源的Retrieval-Augmented Generation框架，旨在通过结�
 - [x] HuggingFaceEmbedding
 
 ### Reranker模型
-- [ ] bce-embedding-base_v1
+- [x] bce-embedding-base_v1
 
 ## 📚使用文档
 
@@ -108,6 +108,9 @@ result = rag.get_context(question=question, limit=limit)
 ## 版本更新
 
 ```angular2html
+v0.0.6
+新增Milvus向量数据库，数据修改、删除等功能
+
 v0.0.3
 新增HuggingFaceEmbedding
 

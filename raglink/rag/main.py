@@ -9,6 +9,7 @@
 
 
 import os
+import uuid
 from typing import Any, Dict, Optional
 from pydantic import BaseModel, Field, ValidationError
 
@@ -58,8 +59,13 @@ class RAGLink:
             raise
         return cls(config)
 
-    # 执行向量数据存储
+    # 执行向量数据存储,单文件
     def execute_store(self, file_path):
+        """
+        执行向量数据存储
+        :param file_path: 单文件地址
+        :return:    list
+        """
         logger.info(f"执行文档 {file_path}")
         # 1. 获取加载内容
         file_content = DocumentLoaders().run(file_path=file_path)
@@ -67,20 +73,70 @@ class RAGLink:
         # 2. 对加载内容进行切割
         docs = self.test_splitter.execute(file_content=file_content)
 
+        # 2.1 给加载内容添加ID号
+        for doc in docs:
+            doc.id = int(uuid.uuid4().int % (2**63))
+
         # 3. 向量化与向量存储
-        self.vector_store.insert(embeddings=self.embedding_model, vectors=docs)
+        result_vector = self.vector_store.insert(docs=docs, embeddings=self.embedding_model)
+
+        id_set = set(result_vector['insert_ids'])
+        result = []
+        for doc in docs:
+            if doc.id in id_set:
+                result.append({
+                    "id": doc.id,
+                    "content": doc.page_content,
+                    "metadata": doc.metadata
+                })
 
         logger.debug(f"执行向量数据存储完成: {file_path}")
+        return result
 
-    def execute_store_batch(self, directory):
+    # 执行向量数据存储,文件夹地址 多文件
+    def execute_store_files(self, directory):
+        """
+        执行向量数据存储
+        :param directory: 文件夹地址
+        :return:    list
+        """
         file_paths = []  # 用于存储文件路径的列表
         for root, directories, files in os.walk(directory):
             for filename in files:
                 filepath = os.path.join(root, filename)
                 file_paths.append(filepath)
+        result_list = []
         for file_path in file_paths:
-            self.execute_store(file_path)
+            res_list = self.execute_store(file_path)
+            result_list.extend(res_list)
+        return result_list
 
+    # 修改向量数据
+    def execute_update(self, docs, is_embeddings=True):
+        """
+        修改向量数据
+        :param docs:            list结构 需要包含ID 、source、content数据
+        :param is_embeddings:   是否使用向量模型 True:使用 False:不使用（已定义向量数据）
+        :return:
+        """
+        if is_embeddings:
+            result_vector = self.vector_store.upsert(docs=docs, embeddings=self.embedding_model)
+        else:
+            result_vector = self.vector_store.upsert(docs=docs, embeddings=None)
+        return result_vector
+
+    # 删除向量数据
+    def execute_delete(self, ids):
+        """
+        删除向量数据
+        :param ids:            list结构 需要包含ID
+        :return:
+        """
+        result_vector = self.vector_store.delete(ids=ids)
+        return result_vector
+
+
+    # ================================================================================
     # 获取上下文信息
     def get_context(self, question, limit=3):
         question_vector = self.embedding_model.embed(question)

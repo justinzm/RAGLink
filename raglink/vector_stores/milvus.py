@@ -6,10 +6,11 @@
 # @desc : Milvus 向量数据库操作
 
 
+import uuid
 from raglink.utils.logger import logger
 from raglink.vector_stores.base import VectorStoreBase
 from langchain_core.documents import Document
-from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
+from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility, db
 
 
 class Milvus():
@@ -77,7 +78,7 @@ class Milvus():
         # CollectionSchema 类创建了一个集合模式 schema（纲要），并指定了集合的字段定义和描述信息。
         # 定义字段
         fields = [
-            FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
+            FieldSchema(name="id", dtype=DataType.INT64, is_primary=True),
             FieldSchema(name="source", dtype=DataType.VARCHAR, max_length=255),
             FieldSchema(name="content", dtype=DataType.VARCHAR, max_length=30000),
             FieldSchema(name="content_vector", dtype=DataType.FLOAT_VECTOR, dim=vector_size),
@@ -149,7 +150,13 @@ class Milvus():
         """
         return self.client.list_collections
 
-    def insert(self, embeddings, vectors):
+    def insert(self, docs, embeddings=None):
+        """
+        向集合中插入向量数据
+        :param embeddings:              向量模型 embeddings
+        :param docs:                 source 来源； page_content 存储数据
+        :return:
+        """
         # 判断分区是否存在，不存在创建分区
         if self.client.has_partition(self.partition_name):
             newpart = self.client.partition(self.partition_name)
@@ -158,18 +165,108 @@ class Milvus():
             # self.create_partition(self.partition_name)
             newpart = self.client.partition(self.partition_name)
 
-        if isinstance(vectors[0], Document):
+        # 判断向量数据是否为Document类型
+        if isinstance(docs[0], Document):
             data_list = []
-            for doc in vectors:
+            for doc in docs:
+                if hasattr(doc, 'id'):
+                    tmp_id = doc.id
+                else:
+                    tmp_id = int(uuid.uuid4().int % (2 ** 63))
+                if hasattr(doc, 'content_vector'):
+                    data_list.append(
+                        {
+                            "id": tmp_id,
+                            "source": doc.metadata.get("source"),
+                            "content": doc.page_content,
+                            "content_vector": doc.content_vector
+                        }
+                    )
+                else:
+                    data_list.append(
+                        {
+                            "id": tmp_id,
+                            "source": doc.metadata.get("source"),
+                            "content": doc.page_content,
+                            "content_vector": embeddings.embed(doc.page_content)
+                        }
+                    )
+            mr = newpart.insert(data=data_list)
+            res = {
+                "insert_count": mr.insert_count,
+                "insert_ids": mr.primary_keys,
+                "err_count": mr.err_count,
+                "delete_count": mr.delete_count,
+                "upsert_count": mr.upsert_count,
+                "succ_count": mr.succ_count,
+            }
+            logger.debug(f"Milvus 分区中插入 {res['succ_count']} 条数据完成")
+            return res
+        else:
+            logger.error("Milvus 插入数据类型错误，请使用Document类型")
+
+    def delete(self, ids:list):
+        """
+        删除集合中指定id的数据
+        :param ids:       数据id list
+        :return:          删除数据量
+        """
+        newpart = self.client.partition(self.partition_name)
+
+        try:
+            ids_str = ','.join([str(item) for item in ids])
+            filter = "id in [{}]".format(ids_str)
+            res = newpart.delete(
+                expr=filter
+            )
+            logger.debug(f"Milvus 分区中删除 {res.delete_count} 条数据完成")
+            return res.delete_count
+        except Exception as e:
+            logger.error(f"Milvus 分区中删除数据失败: {e}")
+
+    def upsert(self, docs, embeddings=None):
+        """
+        更新集合中数据
+        :param docs:      数据
+        :return:
+        """
+        data_list = []
+        for doc in docs:
+            if hasattr(doc, 'content_vector'):
                 data_list.append(
                     {
-                        "source": doc.metadata.get("source"),
-                        "content": doc.page_content,
-                        "content_vector": embeddings.embed(doc.page_content)
+                        "id": doc['id'],
+                        "source": doc['source'],
+                        "content": doc['content'],
+                        "content_vector": doc['content_vector']
                     }
                 )
-            newpart.insert(data=data_list)
-            logger.debug(f"Milvus 分区中插入 {len(data_list)} 条数据完成")
+            else:
+                data_list.append(
+                    {
+                        "id": doc['id'],
+                        "source": doc['source'],
+                        "content": doc['content'],
+                        "content_vector": embeddings.embed(doc['content'])
+                    }
+                )
+        newpart = self.client.partition(self.partition_name)
+        res = newpart.upsert(data=data_list)
+        return res
+
+    # def get_data(self, ids):
+    #     """
+    #     获取集合中数据
+    #     :return:
+    #     """
+    #     newpart = self.client.partition(self.partition_name)
+    #     ids_str = ','.join([str(item) for item in ids])
+    #     filter = "id in [{}]".format(ids_str)
+    #
+    #     res = newpart.query(
+    #         expr=filter
+    #     )
+    #     return res
 
     # 查询分区中的数据
     def search(self, query, limit=3):

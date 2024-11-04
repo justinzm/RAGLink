@@ -52,7 +52,7 @@ if __name__ == "__main__":
     # file_path = "../data/loader.md"
     # file_path = "../data/fake.xlsx"
     # file_path = "../data/loader.csv"
-    file_path = "../data/安徽产业介绍问答.docx"
+    file_path = "../../data/电信问答.txt"
     res = DocumentLoaders().run(file_path)
     print(res)
 

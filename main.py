@@ -25,9 +25,9 @@ config = {
     "vector_store": {
         "provider": "milvus",
         "config": {
-            "collection_name": "aimdt",
+            "collection_name": "test",
             "vector_size": 1536,
-            "partition_name": "nutrition",
+            "partition_name": "1104",
             # "uri": os.getenv("MILVUS_URI_EN"),
             # "api_key": os.getenv("MILVUS_TOKEN_EN"),
             "host": "localhost",
@@ -52,7 +52,25 @@ config = {
 rag = RAGLink.from_config(config)
 # print(rag.test())
 
-res = rag.execute_store("./data/nutrition/基于患者报告结局的肿瘤营养治疗系统临床应用专家共识.pdf")
+# 执行存储文件
+# res = rag.execute_store("./data/电信问答.txt")
+# print(res)
+
+# 执行修改存储数据
+# data = [{
+#     "id": 109476940401719709,
+#     "content": "测试修改功能",
+#     "source": "测试.txt"
+# }]
+# res = rag.execute_update(docs=data)
+# print(res)
+
+# 执行删除存储数据
+res = rag.execute_delete(ids=[109476940401719709])
+print(res)
+
+# 执行存储多文件
 # res = rag.execute_store_batch("./data")
 
+# 获取上下文信息
 # res = rag.get_context(question="14个的大型语言模型有哪些", limit=2)
