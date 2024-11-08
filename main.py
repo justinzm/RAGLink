@@ -25,21 +25,24 @@ config = {
     "vector_store": {
         "provider": "milvus",
         "config": {
-            "collection_name": "test",
+            "collection_name": "dianxin",
             "vector_size": 1536,
-            "partition_name": "1104",
+            "partition_name": "1108",
             # "uri": os.getenv("MILVUS_URI_EN"),
             # "api_key": os.getenv("MILVUS_TOKEN_EN"),
             "host": "localhost",
             "port": 19530
         }
     },
+    # "test_splitter": {
+    #     "provider": "recursive_character",
+    #     "config": {
+    #         "chunk_size": 500,
+    #         "chunk_overlap": 50
+    #     }
+    # },
     "test_splitter": {
-        "provider": "recursive_character",
-        "config": {
-            "chunk_size": 600,
-            "chunk_overlap": 50
-        }
+        "provider": "separator",
     },
     "embedder": {
         "provider": "minimax",
@@ -53,8 +56,8 @@ rag = RAGLink.from_config(config)
 # print(rag.test())
 
 # 执行存储文件
-# res = rag.execute_store("./data/电信问答.txt")
-# print(res)
+res = rag.execute_store("./data/电信问答1108.txt")
+print(res)
 
 # 执行修改存储数据
 # data = [{
@@ -66,8 +69,8 @@ rag = RAGLink.from_config(config)
 # print(res)
 
 # 执行删除存储数据
-res = rag.execute_delete(ids=[109476940401719709])
-print(res)
+# res = rag.execute_delete(ids=[109476940401719709])
+# print(res)
 
 # 执行存储多文件
 # res = rag.execute_store_batch("./data")
