@@ -154,7 +154,7 @@ class Milvus():
         """
         向集合中插入向量数据
         :param embeddings:              向量模型 embeddings
-        :param docs:                 source 来源； page_content 存储数据
+        :param docs:                    source 来源； page_content 存储数据
         :return:
         """
         # 判断分区是否存在，不存在创建分区
