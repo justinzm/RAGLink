@@ -25,11 +25,11 @@ config = {
     "vector_store": {
         "provider": "milvus",
         "config": {
-            "collection_name": "dianxin",
+            "collection_name": "dx_test",
             "vector_size": 1536,
-            "partition_name": "1108",
-            # "uri": os.getenv("MILVUS_URI_EN"),
-            # "api_key": os.getenv("MILVUS_TOKEN_EN"),
+            "partition_name": "0207",
+            # "uri": os.getenv("MILVUS_URI"),
+            # "api_key": os.getenv("MILVUS_TOKEN"),
             "host": "localhost",
             "port": 19530
         }
@@ -56,20 +56,25 @@ rag = RAGLink.from_config(config)
 # print(rag.test())
 
 # 执行存储文件
-res = rag.execute_store("./data/电信问答1108.txt")
-print(res)
+# res = rag.execute_store("./data/电信问答1108.txt")
+# print(res)
 
 # 执行修改存储数据
 # data = [{
-#     "id": 109476940401719709,
 #     "content": "测试修改功能",
 #     "source": "测试.txt"
 # }]
 # res = rag.execute_update(docs=data)
 # print(res)
 
+data = [{
+    "content": "测试修改功能003",
+    "source": "测试.txt"
+}]
+res = rag.execute_insert(docs=data)
+print(res)
 # 执行删除存储数据
-# res = rag.execute_delete(ids=[109476940401719709])
+# res = rag.execute_delete(ids=[4370365826046822406])
 # print(res)
 
 # 执行存储多文件

@@ -111,7 +111,7 @@ class RAGLink:
             result_list.extend(res_list)
         return result_list
 
-    # 修改向量数据
+    # 修改向量数据   auto_id=True 时需要换成delete insert方式
     def execute_update(self, docs, is_embeddings=True):
         """
         修改向量数据
@@ -124,6 +124,21 @@ class RAGLink:
         else:
             result_vector = self.vector_store.upsert(docs=docs, embeddings=None)
         return result_vector
+
+    # 插入向量数据
+    def execute_insert(self, docs, is_embeddings=True):
+        """
+        插入向量数据
+        :param docs:             list结构 需要包含ID 、source、content数据
+        :param is_embeddings:    是否使用向量模型 True:使用 False:不使用（已定义向量数据）
+        :return:
+        """
+        if is_embeddings:
+            result_vector = self.vector_store.insert(docs=docs, embeddings=self.embedding_model)
+        else:
+            result_vector = self.vector_store.insert(docs=docs, embeddings=None)
+        return result_vector
+
 
     # 删除向量数据
     def execute_delete(self, ids):

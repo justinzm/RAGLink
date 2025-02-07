@@ -108,6 +108,9 @@ result = rag.get_context(question=question, limit=limit)
 ## 版本更新
 
 ```angular2html
+v0.0.7
+新增Milvus向量数据库，数据插入
+
 v0.0.6
 新增Milvus向量数据库，数据修改、删除等功能
 

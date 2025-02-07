@@ -78,7 +78,7 @@ class Milvus():
         # CollectionSchema 类创建了一个集合模式 schema（纲要），并指定了集合的字段定义和描述信息。
         # 定义字段
         fields = [
-            FieldSchema(name="id", dtype=DataType.INT64, is_primary=True),
+            FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=False),
             FieldSchema(name="source", dtype=DataType.VARCHAR, max_length=255),
             FieldSchema(name="content", dtype=DataType.VARCHAR, max_length=30000),
             FieldSchema(name="content_vector", dtype=DataType.FLOAT_VECTOR, dim=vector_size),
@@ -199,30 +199,47 @@ class Milvus():
                 "delete_count": mr.delete_count,
                 "upsert_count": mr.upsert_count,
                 "succ_count": mr.succ_count,
+                "data": self._remove_content_vector(data_list)
+            }
+            logger.debug(f"Milvus 分区中插入 {mr.succ_count} 条数据完成")
+            return res
+        else:
+            data_list = []
+            for doc in docs:
+                if hasattr(doc, 'id'):
+                    tmp_id = doc['id']
+                else:
+                    tmp_id = int(uuid.uuid4().int % (2 ** 63))
+                if hasattr(doc, 'content_vector'):
+                    data_list.append(
+                        {
+                            "id": tmp_id,
+                            "source": doc['source'],
+                            "content": doc['content'],
+                            "content_vector": doc['content_vector']
+                        }
+                    )
+                else:
+                    data_list.append(
+                        {
+                            "id": tmp_id,
+                            "source": doc['source'],
+                            "content": doc['content'],
+                            "content_vector": embeddings.embed(doc['content'])
+                        }
+                    )
+            mr = newpart.insert(data=data_list)
+            res = {
+                "insert_count": mr.insert_count,
+                "insert_ids": mr.primary_keys,
+                "err_count": mr.err_count,
+                "delete_count": mr.delete_count,
+                "upsert_count": mr.upsert_count,
+                "succ_count": mr.succ_count,
+                "data": self._remove_content_vector(data_list)
             }
             logger.debug(f"Milvus 分区中插入 {res['succ_count']} 条数据完成")
             return res
-        else:
-            logger.error("Milvus 插入数据类型错误，请使用Document类型")
-
-    def delete(self, ids:list):
-        """
-        删除集合中指定id的数据
-        :param ids:       数据id list
-        :return:          删除数据量
-        """
-        newpart = self.client.partition(self.partition_name)
-
-        try:
-            ids_str = ','.join([str(item) for item in ids])
-            filter = "id in [{}]".format(ids_str)
-            res = newpart.delete(
-                expr=filter
-            )
-            logger.debug(f"Milvus 分区中删除 {res.delete_count} 条数据完成")
-            return res.delete_count
-        except Exception as e:
-            logger.error(f"Milvus 分区中删除数据失败: {e}")
 
     def upsert(self, docs, embeddings=None):
         """
@@ -252,7 +269,15 @@ class Milvus():
                 )
         newpart = self.client.partition(self.partition_name)
         res = newpart.upsert(data=data_list)
+        res['data'] = self._remove_content_vector(data_list)
         return res
+
+    def _remove_content_vector(self, data_list):
+        for item in data_list:
+            if 'content_vector' in item:
+                del item['content_vector']
+        return data_list
+
 
     # def get_data(self, ids):
     #     """
@@ -303,11 +328,31 @@ class Milvus():
         else:
             logger.warning(f"Milvus 该分区不存在，分区名：{self.partition_name}")
 
+    # 删除集合分区中指定id的数据
+    def delete(self, ids:list):
+        """
+        删除集合中指定id的数据
+        :param ids:       数据id list
+        :return:          删除数据量
+        """
+        newpart = self.client.partition(self.partition_name)
+
+        try:
+            ids_str = ','.join([str(item) for item in ids])
+            filter = "id in [{}]".format(ids_str)
+            res = newpart.delete(
+                expr=filter
+            )
+            logger.debug(f"Milvus 分区中删除 {res.delete_count} 条数据完成")
+            return res
+        except Exception as e:
+            logger.error(f"Milvus 分区中删除数据失败: {e}")
+
     # 删除集合
     def delete_col(self):
         """
-            删除集合
-            :return:
+        删除集合
+        :return:
         """
         try:
             if utility.has_collection(self.collection_name):
