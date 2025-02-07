@@ -60,19 +60,24 @@ rag = RAGLink.from_config(config)
 # print(res)
 
 # 执行修改存储数据
-# data = [{
-#     "content": "测试修改功能",
-#     "source": "测试.txt"
-# }]
-# res = rag.execute_update(docs=data)
-# print(res)
-
 data = [{
-    "content": "测试修改功能003",
+    "id": 572621183905572102,
+    "content": "测试修改功能001",
+    "source": "测试.txt"
+},{
+    "id": 610785405634847615,
+    "content": "测试修改功能002",
     "source": "测试.txt"
 }]
-res = rag.execute_insert(docs=data)
+res = rag.execute_update(docs=data)
 print(res)
+
+# data = [{
+#     "content": "测试修改功能003",
+#     "source": "测试.txt"
+# }]
+# res = rag.execute_insert(docs=data)
+# print(res)
 # 执行删除存储数据
 # res = rag.execute_delete(ids=[4370365826046822406])
 # print(res)

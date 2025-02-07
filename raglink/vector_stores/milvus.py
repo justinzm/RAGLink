@@ -268,8 +268,17 @@ class Milvus():
                     }
                 )
         newpart = self.client.partition(self.partition_name)
-        res = newpart.upsert(data=data_list)
-        res['data'] = self._remove_content_vector(data_list)
+        mr = newpart.upsert(data=data_list)
+        res = {
+            "delete_count": mr.delete_count,
+            "err_count": mr.err_count,
+            "err_index": mr.err_index,
+            "insert_count": mr.insert_count,
+            "primary_keys": mr.primary_keys,
+            "upsert_count": mr.upsert_count,
+            "succ_count": mr.succ_count,
+            "data": self._remove_content_vector(data_list)
+        }
         return res
 
     def _remove_content_vector(self, data_list):
