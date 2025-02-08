@@ -101,8 +101,6 @@ config ：
 
 ##### 2. 向量模型配置
 
-openai：OpenAI的Embeddings模型；minimax：MiniMax的Embeddings模型；huggingface：HuggingFace的Embeddings模型；Doubao：Doubao的
-
 ```
 config = {
     ……
