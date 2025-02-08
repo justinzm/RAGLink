@@ -30,7 +30,7 @@ class RecursiveCharacterTestSplitter(TestSplitterBase):
         if self.separator == None:
             self.separator = ["\n\n", "\n", " ", ""]
         text_split = RecursiveCharacterTextSplitter(
-            # separator=self.separator,
+            separator=self.separator,
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
             length_function=len,

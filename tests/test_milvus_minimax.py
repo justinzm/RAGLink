@@ -4,7 +4,7 @@
 # @Author  : justin.郑
 # @mail    : 3907721@qq.com
 # @Time    : 2024/8/7 下午5:31
-# @File    : test_raglink.py
+# @File    : test_milvus_minimax.py
 # @desc    : 测试 RAGLink
 
 

@@ -15,7 +15,8 @@ class EmbedderFactory:
     provider_to_class = {
         "openai": "raglink.embeddings.openai.OpenAIEmbedding",
         "minimax": "raglink.embeddings.minimax.MinimaxEmbedding",
-        "huggingface": "raglink.embeddings.huggingface.HuggingFaceEmbedding"
+        "huggingface": "raglink.embeddings.huggingface.HuggingFaceEmbedding",
+        "doubao": "raglink.embeddings.doubao.DouBaoEmbedding"
     }
 
     @classmethod

@@ -25,11 +25,9 @@ config = {
     "vector_store": {
         "provider": "milvus",
         "config": {
-            "collection_name": "dx_test",
-            "vector_size": 1536,
-            "partition_name": "0207",
-            # "uri": os.getenv("MILVUS_URI"),
-            # "api_key": os.getenv("MILVUS_TOKEN"),
+            "collection_name": "dx_test_doubao",
+            "vector_size": 2560,
+            "partition_name": "0208",
             "host": "localhost",
             "port": 19530
         }
@@ -45,10 +43,10 @@ config = {
         "provider": "separator",
     },
     "embedder": {
-        "provider": "minimax",
+        "provider": "doubao",
         "config": {
-            "api_key": os.getenv("MINIMAX_API_KEY"),
-            "group_id": os.getenv("MINIMAX_GROUP_ID"),
+            "api_key": os.getenv("DOUBAO_API_KEY"),
+            "model": os.getenv("DOUBAO_EMDEDDINGS_MODLE"),
         }
     }
 }
@@ -56,16 +54,16 @@ rag = RAGLink.from_config(config)
 # print(rag.test())
 
 # 执行存储文件
-# res = rag.execute_store("./data/电信问答1108.txt")
-# print(res)
+res = rag.execute_store("./data/电信问答1108.txt")
+print(res)
 
 # 执行修改存储数据
 data = [{
-    "id": 572621183905572102,
+    "id": 530098045657612940,
     "content": "测试修改功能001",
     "source": "测试.txt"
 },{
-    "id": 610785405634847615,
+    "id": 533534635482701198,
     "content": "测试修改功能002",
     "source": "测试.txt"
 }]

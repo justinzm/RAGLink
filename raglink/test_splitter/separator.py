@@ -19,20 +19,13 @@ class SeparatorTestSplitter(TestSplitterBase):
     def __init__(
         self,
         separator=None,
-        chunk_size=None,
-        chunk_overlap=None,
-        is_separator_regex=False
     ):
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
         self.separator = separator
-        self.is_separator_regex = is_separator_regex
 
     def execute(self, file_content):
         if self.separator == None:
             self.separator = "\n\n"
         try:
-            tmp = file_content[0].page_content
             result = self.specialized_chunking(file_content[0].page_content, self.separator, file_content[0].metadata["source"])
             logger.info(f"TextSplitter 执行 分隔符 切割文档，切割{len(result)}块")
             return result

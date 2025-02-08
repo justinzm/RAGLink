@@ -34,7 +34,7 @@ class Milvus():
         :param host:
         :param port:
         :param uri:
-        :param token:
+        :param api_key:
         """
         self.collection_name = collection_name
         self.partition_name = partition_name
