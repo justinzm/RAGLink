@@ -43,12 +43,18 @@ class RAGConfig(BaseModel):
 class RAGLink:
     def __init__(self, config: RAGConfig = RAGConfig()):
         self.config = config
-        self.embedding_model = EmbedderFactory.create(self.config.embedder.provider,
-                                                      self.config.embedder.config)
-        self.vector_store = VectorStoreFactory.create(self.config.vector_store.provider,
-                                                      self.config.vector_store.config)
-        self.test_splitter = TestSplitterFactory.create(self.config.test_splitter.provider,
-                                                       self.config.test_splitter.config)
+        self.embedding_model = EmbedderFactory.create(
+                                    provider_name = self.config.embedder.provider,
+                                    config = self.config.embedder.config
+                                )
+        self.vector_store = VectorStoreFactory.create(
+                                provider_name=self.config.vector_store.provider,
+                                config = self.config.vector_store.config
+                            )
+        self.test_splitter = TestSplitterFactory.create(
+                                provider_name = self.config.test_splitter.provider,
+                                config = self.config.test_splitter.config
+                            )
 
     @classmethod
     def from_config(cls, config_dict: Dict[str, Any]):

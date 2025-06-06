@@ -16,6 +16,7 @@ RAGLink是一个开源的Retrieval-Augmented Generation框架，旨在通过结�
 - [x] Qdrant
 
 ### Embeddings模型
+- [x] ModelScopeEmbedding
 - [x] OpenAIEmbedding
 - [x] MiniMaxEmbedding
 - [x] DouBaoEmbedding
@@ -114,6 +115,14 @@ config = {
     ……
 }
 ```
+**ModelScope modelscope-embedding模型**
+
+provider: "modelscope"
+
+config ：
+
+- model_name      modelscope embedding model name
+
 
 **MiniMax Embeddings模型**
 
@@ -236,6 +245,9 @@ result = rag.get_context(question=question, limit=limit)
 ## 版本更新
 
 ```angular2html
+v0.1.0
+新增 ModelScope Embedding
+
 v0.0.9
 新增 DouBao Embedding
 
