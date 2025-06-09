@@ -14,26 +14,26 @@ config = {
     "vector_store": {
         "provider": "milvus",
         "config": {
-            "collection_name": "……",
-            "vector_size": 1536,
-            "partition_name": "……",
+            "collection_name": "sinopec_test",
+            "vector_size": 768,
+            "partition_name": "0609a",
             "host": "localhost",
             "port": 19530
         }
     },
     "test_splitter": {
-        "provider": "separator",
+        "provider": "recursive_character",
         "config": {
             "chunk_size": 300,
-            "chunk_overlap": 20,
+            "chunk_overlap": 50,
             "separators": "\n\n"
         }
     },
     "embedder": {
-        "provider": "minimax",
+        "provider": "modelscope",
         "config": {
-            "api_key": "……",
-            "group_id": "……",
+            "model_name": "iic/nlp_corom_sentence-embedding_chinese-base",
+            "modelscpe_cache": "D:/modelscope_models",
         }
     }
 }
@@ -42,11 +42,11 @@ rag = RAGLink.from_config(config)
 # ==========================================================================================
 # 连接数据库 -- 创建集合 -- 创建分区 -- 加载文件 -- 切割文档 -- 提取向量 -- 存储向量
 # 01-1 执行存储文件
-# res = rag.execute_store("./data/电信问答.txt")
+# res = rag.execute_store("../data/电信问答.txt")
 # 返回内容  执行向量数据存储完成
 
 # 01-2 执行存储多文件
-# res = rag.execute_store_batch("./data")
+res = rag.execute_store_files("../data/sinopec")
 
 
 # ============================================================================================

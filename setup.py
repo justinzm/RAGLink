@@ -10,7 +10,7 @@ import os
 
 URL = 'https://github.com/justinzm/RAGLink'
 NAME = 'RAGLink'
-VERSION = '0.1.0'
+VERSION = '0.1.2'
 DESCRIPTION = 'RAGLink是一个开源的Retrieval-Augmented Generation框架，旨在通过结合检索和大模型生成技术，提升自然语言处理任务的性能和效率。为用户提供了一个强大、灵活且易于扩展的开发环境。'
 if os.path.exists('README.md'):
     with open('README.md', encoding='utf-8') as f:
@@ -24,17 +24,20 @@ PLATFORMS = [
     'all',
 ]
 REQUIRES = [
-    'langchain==0.2.5',
-    'langchain-community==0.2.5',
-    'langchain-openai==0.1.8',
+    'langchain==0.3.25',
+    'langchain-community==0.3.24',
     'loguru==0.7.2',
-    'pymilvus==2.4.1',
-    'python-dotenv==1.0.1',
-    'unstructured==0.15.0',
+    'pymilvus==2.5.10',
+    'python-dotenv==1.1.0',
     'openpyxl==3.1.5',
-    'python-magic==0.4.27',
     'qdrant-client==1.10.1',
-    'docx2txt==0.8'
+    'docx2txt==0.8',
+    'sentence_transformers==4.1.0',
+    'datasets==2.18.0',
+    'modelscope==1.26.0',
+    'addict',
+    'torch',
+    'simplejson'
 ]
 # CONSOLE_SCRIPT = 'my-cmd=my_pkg.my_cmd:main'
 # # 如果想在 pip install 之后自动生成一个可执行命令，就靠它了:

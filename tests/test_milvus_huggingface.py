@@ -28,7 +28,7 @@ config = {
         "config": {
             "chunk_size": 300,
             "chunk_overlap": 50,
-            "separator": "\n\n"
+            "separators": "\n\n"
         }
     },
     "embedder": {

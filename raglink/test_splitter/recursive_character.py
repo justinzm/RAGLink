@@ -18,19 +18,19 @@ class RecursiveCharacterTestSplitter(TestSplitterBase):
         self,
         chunk_size,
         chunk_overlap,
-        separator=None,
+        separators=None,
         is_separator_regex=False
     ):
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
-        self.separator = separator
+        self.separators = separators
         self.is_separator_regex = is_separator_regex
 
     def execute(self, file_content):
-        if self.separator == None:
-            self.separator = ["\n\n", "\n", " ", ""]
+        if self.separators == None:
+            self.separators = ["\n\n", "\n", " ", ""]
         text_split = RecursiveCharacterTextSplitter(
-            separator=self.separator,
+            separators=self.separators,
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
             length_function=len,
