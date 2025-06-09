@@ -14,26 +14,27 @@ config = {
     "vector_store": {
         "provider": "milvus",
         "config": {
-            "collection_name": "……",
+            "collection_name": "dianxin",
             "vector_size": 1536,
-            "partition_name": "……",
+            "partition_name": "0920",
+            # "uri": os.getenv("MILVUS_URI"),
+            # "api_key": os.getenv("MILVUS_TOKEN"),
             "host": "localhost",
             "port": 19530
         }
     },
     "test_splitter": {
-        "provider": "separator",
+        "provider": "recursive_character",
         "config": {
             "chunk_size": 300,
-            "chunk_overlap": 20,
+            "chunk_overlap": 50,
             "separator": "\n\n"
         }
     },
     "embedder": {
-        "provider": "minimax",
+        "provider": "huggingface",
         "config": {
-            "api_key": "……",
-            "group_id": "……",
+            "model_name": "sentence-transformers/all-mpnet-base-v2",
         }
     }
 }
