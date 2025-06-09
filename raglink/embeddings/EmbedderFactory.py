@@ -16,7 +16,8 @@ class EmbedderFactory:
         "openai": "raglink.embeddings.openai.OpenAIEmbedding",
         "minimax": "raglink.embeddings.minimax.MinimaxEmbedding",
         "huggingface": "raglink.embeddings.huggingface.HuggingFaceEmbedding",
-        "doubao": "raglink.embeddings.doubao.DouBaoEmbedding"
+        "doubao": "raglink.embeddings.doubao.DouBaoEmbedding",
+        "modelscope": "raglink.embeddings.modelscope.ModelScopeEmbedding",
     }
 
     @classmethod

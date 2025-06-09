@@ -10,7 +10,7 @@ import os
 
 URL = 'https://github.com/justinzm/RAGLink'
 NAME = 'RAGLink'
-VERSION = '0.0.9'
+VERSION = '0.1.0'
 DESCRIPTION = 'RAGLink是一个开源的Retrieval-Augmented Generation框架，旨在通过结合检索和大模型生成技术，提升自然语言处理任务的性能和效率。为用户提供了一个强大、灵活且易于扩展的开发环境。'
 if os.path.exists('README.md'):
     with open('README.md', encoding='utf-8') as f:
