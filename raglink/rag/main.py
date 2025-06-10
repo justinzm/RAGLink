@@ -95,7 +95,6 @@ class RAGLink:
                     "content": doc.page_content,
                     "metadata": doc.metadata
                 })
-
         logger.debug(f"执行向量数据存储完成: {file_path}")
         return result
 

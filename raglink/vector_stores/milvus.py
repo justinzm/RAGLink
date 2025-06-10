@@ -27,14 +27,14 @@ class Milvus():
     ):
         """
         初始化 Milvus 向量数据库操作类
-        :param collection_name:
-        :param vector_size:
-        :param partition_name:
-        :param connections_name:
-        :param host:
-        :param port:
-        :param uri:
-        :param api_key:
+        :param collection_name:         集合名称
+        :param vector_size:             向量维度
+        :param partition_name:          分区名称
+        :param connections_name:        连接名称
+        :param host:                    本地地址
+        :param port:                    本地端口
+        :param uri:                     远程地址
+        :param api_key:                 远程API KEY
         """
         self.collection_name = collection_name
         self.partition_name = partition_name

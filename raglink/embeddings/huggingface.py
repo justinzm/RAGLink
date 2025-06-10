@@ -5,13 +5,15 @@
 # @File : huggingface.py
 # @desc : HuggingFace Embeddings
 
-
+import os
 from raglink.embeddings.base import EmbeddingBase
 from sentence_transformers import SentenceTransformer
 
 
 class HuggingFaceEmbedding(EmbeddingBase):
-    def __init__(self, model_name):
+    def __init__(self, model_name, model_cache=None):
+        if model_cache is not None or model_cache != "":
+            os.environ["SENTENCE_TRANSFORMERS_HOME"] = model_cache
         self.embeddings = SentenceTransformer(model_name)
 
     def embed(self, text):

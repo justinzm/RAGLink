@@ -34,7 +34,7 @@ class Qdrant(VectorStoreBase):
         """
         初始化 Qdrant 向量数据库操作类
         :param collection_name:                         向量集合名称
-        :param vector_size:
+        :param vector_size:                             向量维度
         :param client (QdrantClient, optional):         Qdrant实例对象
         :param host (str, optional):                    Qdrant本地服务器的主机地址。默认为“localhost”。
         :param port (int, optional):                    Qdrant本地服务器的端口。默认为6333。

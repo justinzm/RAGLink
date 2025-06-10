@@ -13,9 +13,9 @@ from langchain_community.embeddings import ModelScopeEmbeddings
 
 
 class ModelScopeEmbedding(EmbeddingBase):
-    def __init__(self, model_name, modelscpe_cache="D:/modelscope_models"):
-        if modelscpe_cache is not None or modelscpe_cache != "":
-            os.environ["MODELSCOPE_CACHE"] = modelscpe_cache
+    def __init__(self, model_name, model_cache=None):
+        if model_cache is not None or model_cache != "":
+            os.environ["MODELSCOPE_CACHE"] = model_cache
         self.embeddings = ModelScopeEmbeddings(model_id=model_name)
 
     def embed(self, text):

@@ -14,11 +14,9 @@ config = {
     "vector_store": {
         "provider": "milvus",
         "config": {
-            "collection_name": "dianxin",
-            "vector_size": 1536,
-            "partition_name": "0920",
-            # "uri": os.getenv("MILVUS_URI"),
-            # "api_key": os.getenv("MILVUS_TOKEN"),
+            "collection_name": "qwen",
+            "vector_size": 1024,
+            "partition_name": "0609",
             "host": "localhost",
             "port": 19530
         }
@@ -34,7 +32,8 @@ config = {
     "embedder": {
         "provider": "huggingface",
         "config": {
-            "model_name": "sentence-transformers/all-mpnet-base-v2",
+            "model_name": "Qwen/Qwen3-Reranker-0.6B",
+            "model_cache": "D:/modelscope_models"
         }
     }
 }
@@ -43,7 +42,8 @@ rag = RAGLink.from_config(config)
 # ==========================================================================================
 # 连接数据库 -- 创建集合 -- 创建分区 -- 加载文件 -- 切割文档 -- 提取向量 -- 存储向量
 # 01-1 执行存储文件
-# res = rag.execute_store("./data/电信问答.txt")
+res = rag.execute_store("../data/电信问答1108.txt")
+print(res)
 # 返回内容  执行向量数据存储完成
 
 # 01-2 执行存储多文件

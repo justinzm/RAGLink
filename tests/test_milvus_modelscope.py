@@ -33,7 +33,7 @@ config = {
         "provider": "modelscope",
         "config": {
             "model_name": "iic/nlp_corom_sentence-embedding_chinese-base",
-            "modelscpe_cache": "D:/modelscope_models",
+            "model_cache": "D:/modelscope_models",
         }
     }
 }

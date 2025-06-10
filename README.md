@@ -245,6 +245,9 @@ result = rag.get_context(question=question, limit=limit)
 ## 版本更新
 
 ```angular2html
+v0.1.3
+优化embedding 模型模块
+
 v0.1.0
 新增 ModelScope Embedding
 
